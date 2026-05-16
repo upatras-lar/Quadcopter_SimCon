@@ -213,10 +213,14 @@ class QuadcopterVelocityEnv(gym.Env):
         target[2] = np.clip(target[2], -self.max_target_yaw_rate, self.max_target_yaw_rate)
         self.target_velocity = target
 
-    def enable_random_wind(self, enabled: bool = True, magnitude: Optional[float] = None) -> None:
+    def enable_random_wind(self, enabled: bool = True, magnitude: Optional[float] = None, heading_deg: Optional[float] = None, elevation_deg: Optional[float] = None) -> None:
         self.random_wind = bool(enabled)
         if magnitude is not None:
             self.wind_magnitude = float(magnitude)
+        if heading_deg is not None:
+            self.wind_heading_deg = float(heading_deg)
+        if elevation_deg is not None:
+            self.wind_elevation_deg = float(elevation_deg)
         self.wind = self._make_wind()
 
     def _scale_action_to_motor_cmd(self, action: np.ndarray) -> np.ndarray:
@@ -347,6 +351,10 @@ class QuadcopterVelocityEnv(gym.Env):
             self.random_wind = bool(options["random_wind"])
         if "wind_magnitude" in options:
             self.wind_magnitude = float(options["wind_magnitude"])
+        if "wind_heading_deg" in options:
+            self.wind_heading_deg = float(options["wind_heading_deg"])
+        if "wind_elevation_deg" in options:
+            self.wind_elevation_deg = float(options["wind_elevation_deg"])
 
         self.t = 0.0
         self.steps = 0
